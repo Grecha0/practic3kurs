@@ -193,7 +193,8 @@ def new_game_local():
 
         pygame.display.flip()
 
-    pygame.quit()
+    fade()
+    main_menu() 
 
 def new_game_ii():
     izi_button = ImageButton(WIDTH/2-(252/2), 300, 252, 74, "", "image/green_button2.jpg", "image/green_button2_hover.jpg", "mp3/click.wav")
@@ -261,16 +262,16 @@ def new_game_against_bot(difficulty):
     running = True
     while running:
         clock.tick(MAX_FPS)
-        
-        # Проверяка хода
+
+        # Проверка хода
         if game.turn == bot.color: 
-            move = bot.get_move(game) 
+            move = bot.choose_action(game)  # Замените get_move() на правильный метод
             if move is not None:
                 game.make_move(move[0], move[1]) 
 
         game.update()
 
-        
+        # Проверка на победителя
         if game.winner() is not None:
             print("Победитель:", game.winner())
             running = False
@@ -292,7 +293,10 @@ def new_game_against_bot(difficulty):
 
         pygame.display.flip()
 
-    pygame.quit()
+    fade()
+    main_menu() 
+
+
 
 def fade():
     running = True
