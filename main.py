@@ -65,7 +65,6 @@ def main_menu():
             btn.check_hover(pygame.mouse.get_pos())
             btn.draw(screen)
 
-        # Отображение курсора в текущей позиции мыши
         x, y = pygame.mouse.get_pos()
         screen.blit(cursor, (x-2, y-2))
 
@@ -246,7 +245,6 @@ def new_game_ii():
         pygame.display.flip()
 
 def new_game_against_bot(difficulty):
-    # Задаем файл модели и цвет бота
     if difficulty == "easy":
         model_file = "easy_bot2_model.pkl"
     elif difficulty == "medium":
@@ -254,30 +252,25 @@ def new_game_against_bot(difficulty):
     else:
         model_file = "hard_bot_model.pkl"
 
-    # Загружаем модель Q-таблицы для бота
-    with open(model_file, "rb") as f:
-        q_table = pickle.load(f)
-
     # Бот будет играть за белые шашки
     bot = CheckersBot(color=Checker_2, difficulty=difficulty)
     bot.load_model(model_file)
 
-    # Создаем экземпляр игры и передаем туда бота
     game = GameBot(WIN, bot=bot)
 
     running = True
     while running:
         clock.tick(MAX_FPS)
         
-        # Проверяем, кто должен сделать ход: игрок или бот
-        if game.turn == bot.color:  # Если очередь бота
-            move = bot.get_move(game)  # Получаем ход от бота
+        # Проверяка хода
+        if game.turn == bot.color: 
+            move = bot.get_move(game) 
             if move is not None:
-                game.make_move(move[0], move[1])  # Выполняем ход бота
+                game.make_move(move[0], move[1]) 
 
-        game.update()  # Обновление состояния игры на экране
+        game.update()
 
-        # Проверка на победителя
+        
         if game.winner() is not None:
             print("Победитель:", game.winner())
             running = False
@@ -294,7 +287,6 @@ def new_game_against_bot(difficulty):
                 row, col = get_row_col_from_mouse(pos)
                 game.select(row, col)
 
-        # Отображение пользовательского курсора
         x, y = pygame.mouse.get_pos()
         screen.blit(cursor, (x-2, y-2))
 
@@ -320,7 +312,7 @@ def fade():
             fade_alpha = 255
             running = False
         pygame.display.flip()
-        clock.tick(MAX_FPS)  # Ограничение FPS
+        clock.tick(MAX_FPS)
 
 def get_row_col_from_mouse(pos):
     x, y = pos
