@@ -248,11 +248,12 @@ def new_game_ii():
 def new_game_against_bot(difficulty):
     if difficulty == "easy":
         model_file = "easy_bot2_model.pkl"
+    """
     elif difficulty == "medium":
         model_file = "medium_bot_model.pkl"
     else:
         model_file = "hard_bot_model.pkl"
-
+    """
     # Бот будет играть за белые шашки
     bot = CheckersBot(color=Checker_2, difficulty=difficulty)
     bot.load_model(model_file)
@@ -265,7 +266,7 @@ def new_game_against_bot(difficulty):
 
         # Проверка хода
         if game.turn == bot.color: 
-            move = bot.choose_action(game)  # Замените get_move() на правильный метод
+            move = bot.choose_action(game)
             if move is not None:
                 game.make_move(move[0], move[1]) 
 
