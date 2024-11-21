@@ -3,7 +3,7 @@ from checkers.constants import WIDTH, HEIGHT, SQUARE_SIZE, Checker_1, Checker_2
 from checkers.game import Game
 from checkers_bot import CheckersBot
 
-def train_bot(difficulty='easy'):
+def train_bot(difficulty='medium'):
     pygame.init()
     win = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption('Checkers Bot Training')
@@ -13,7 +13,7 @@ def train_bot(difficulty='easy'):
     bot2 = CheckersBot(color=Checker_2, difficulty=difficulty)  # Бот за белых
     current_bot = bot1  # Начинаем с бота за коричневых
 
-    episodes = 1000
+    episodes = 100000
     for episode in range(episodes):
         game.reset()
         total_reward = 0
@@ -54,4 +54,4 @@ def train_bot(difficulty='easy'):
     pygame.quit()
 
 if __name__ == "__main__":
-    train_bot(difficulty='easy')
+    train_bot(difficulty='medium')

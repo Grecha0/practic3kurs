@@ -248,9 +248,10 @@ def new_game_ii():
 def new_game_against_bot(difficulty):
     if difficulty == "easy":
         model_file = "easy_bot2_model.pkl"
-    """
+    
     elif difficulty == "medium":
         model_file = "medium_bot_model.pkl"
+    """
     else:
         model_file = "hard_bot_model.pkl"
     """
