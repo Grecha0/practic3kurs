@@ -3,7 +3,7 @@ import pickle
 import os  # Добавляем для проверки существования файла модели
 
 class CheckersBot:
-    def __init__(self, color, difficulty='easy', model_path=None):
+    def __init__(self, color, difficulty, model_path=None):
         self.color = color
         self.q_table = {}  # Инициализация пустой Q-таблицы по умолчанию
         self.model_path = model_path  # Устанавливаем путь к модели при инициализации
@@ -70,13 +70,60 @@ class CheckersBot:
         game.board.remove_piece(from_row, from_col)
         game.change_turn()
 
+    
+    def count_pieces(self, game):
+        """
+        Считаем шашки на поле
+        """
+        bot_pieces = 0
+        opponent_pieces = 0
+
+        for row in game.board.board:
+            for piece in row:
+                if piece != 0:
+                    if piece.color == self.color:
+                        bot_pieces += 1
+                    else:
+                        opponent_pieces += 1
+
+        return bot_pieces, opponent_pieces
+
+
     def update_q_table(self, game, reward):
         state = self.get_state(game)
+
+        bot_pieces_before, opponent_pieces_before = self.count_pieces(game)
+
         if self.last_state is not None and self.last_action is not None:
             available_actions = game.get_available_moves(self.color)
             if available_actions:
                 next_q_values = [self.q_table[state].get(action, 0) for action in available_actions]
                 max_next_q_value = max(next_q_values)
+
+                # Проверяем изменения количества шашек
+                bot_pieces_after, opponent_pieces_after = self.count_pieces(game)
+                piece_difference = (opponent_pieces_before - opponent_pieces_after) - (bot_pieces_before - bot_pieces_after) 
+
+
+                if piece_difference > 0:
+                    reward += piece_difference
+                elif piece_difference < 0:
+                    reward += 2 * piece_difference  # -2 за каждую потерянную шашку
+
+                # Проверка на смену хода
+                if game.turn == self.color:
+                    if not hasattr(self, 'no_switch_bonus') or self.no_switch_bonus is None:
+                        self.no_switch_bonus = 1  # Инициализируем бонус, если он отсутствует или равен None
+                    reward += self.no_switch_bonus
+                    self.no_switch_bonus *= 2  # Увеличиваем бонус в геометрической прогрессии
+                else:
+                    if hasattr(self, 'no_switch_bonus') and self.no_switch_bonus:
+                        reward += self.no_switch_bonus
+                    self.no_switch_bonus = 0  # Обнуляем бонус
+
+
+
+                # Обновляем Q-таблицу
                 self.q_table[self.last_state][self.last_action] = (
                     (1 - self.alpha) * self.q_table[self.last_state].get(self.last_action, 0)
                     + self.alpha * (reward + self.gamma * max_next_q_value)
@@ -84,6 +131,7 @@ class CheckersBot:
 
         self.last_state = state
         self.last_action = None
+
 
     def save_model(self, filename=None):
         filename = filename or self.model_path or 'checkers_bot_model.pkl'

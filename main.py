@@ -251,10 +251,10 @@ def new_game_against_bot(difficulty):
     
     elif difficulty == "medium":
         model_file = "medium_bot_model.pkl"
-    """
+    
     else:
         model_file = "hard_bot_model.pkl"
-    """
+    
     # Бот будет играть за белые шашки
     bot = CheckersBot(color=Checker_2, difficulty=difficulty)
     bot.load_model(model_file)

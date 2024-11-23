@@ -103,15 +103,12 @@ class Game:
     def play_turn(self, action, color):
         row, col, target_row, target_col = action
         if color != self.turn:  # Проверяем, чей ход
-            print(f"Не очередь игрока {color}.")
             return -1
         
         if not self.select(row, col):
-            print(f"Некорректный выбор: {row, col}. Текущий ход: {self.turn}")
             return -1
         
         if not self._move(target_row, target_col):
-            print(f"Некорректный ход: {target_row, target_col}")
             return -1
 
         reward = 1
@@ -120,9 +117,7 @@ class Game:
             reward += len(skipped_pieces)
 
         if self.is_over():
-            reward = 10 if self.winner() == color else -10
-
-        print(f"Ход: {(row, col)} в {(target_row, target_col)}, Награда: {reward}")
+            reward = 2 if self.winner() == color else -5
         return reward
 
     def get_available_moves(self, color):
@@ -146,3 +141,6 @@ class Game:
             action = self.bot.choose_action(moves)  # Бот выбирает действие
             self.play_turn(action, self.bot.color)
             self.switch_turn()  # Переключаем очередь хода после хода бота
+
+    def get_winner(self):
+        return self.board.winner()
