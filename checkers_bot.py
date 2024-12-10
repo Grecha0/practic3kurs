@@ -58,18 +58,6 @@ class CheckersBot:
         self.last_action = action
 
         return action
-
-    def execute_action(self, action, game):
-        if action is None:
-            print("Не найдено допустимого хода.")
-            return
-        
-        from_row, from_col, to_row, to_col = action
-        piece = game.board.get_piece(from_row, from_col)
-        game.board.set_piece(to_row, to_col, piece)
-        game.board.remove_piece(from_row, from_col)
-        game.change_turn()
-
     
     def count_pieces(self, game):
         """
