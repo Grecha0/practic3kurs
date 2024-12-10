@@ -267,9 +267,7 @@ def new_game_against_bot(difficulty):
 
         # Проверка хода
         if game.turn == bot.color: 
-            move = bot.choose_action(game)
-            if move is not None:
-                game.make_move(move[0], move[1]) 
+            bot.choose_action(game) 
 
         game.update()
 
