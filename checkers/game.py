@@ -1,17 +1,12 @@
 import pygame
 from checkers.constants import Checker_1, Checker_2, BLUE, SQUARE_SIZE
 from checkers.board import Board
-from checkers_bot import CheckersBot
 
 class Game:
-    def __init__(self, win, bot=None):
+    def __init__(self, win):
         self._init()
         self.current_player = 'brown'  # Текущий игрок (начинает коричневый)
         self.win = win
-        self.bot_model = bot  # Путь к модели бота
-        self.bot = None
-        if self.bot_model:
-            self.load_bot_model()
 
     def update(self):
         self.board.draw(self.win)
@@ -130,17 +125,6 @@ class Game:
                     for move, skipped in valid_moves.items():
                         moves.append((row, col, move[0], move[1]))
         return moves
-
-    def load_bot_model(self):
-        self.bot = CheckersBot(self.bot_model)  # Создаем объект бота
-        self.bot.load_model()  # Загружаем модель для этого бота
-
-    def bot_move(self):
-        if self.bot:
-            moves = self.get_available_moves(self.bot.color)
-            action = self.bot.choose_action(moves)  # Бот выбирает действие
-            self.play_turn(action, self.bot.color)
-            self.switch_turn()  # Переключаем очередь хода после хода бота
 
     def get_winner(self):
         return self.board.winner()
